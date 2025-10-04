@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfyaLink - e-Referral Health System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #667eea;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .patients-icon { background: #667eea; }
+        .referrals-icon { background: #764ba2; }
+        .facilities-icon { background: #f0932b; }
+        .messages-icon { background: #eb4d4b; }
+        .admin-icon { background: #6c5ce7; }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .card-content {
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending { background: #fed7aa; color: #9a3412; }
+        .status-accepted { background: #bbf7d0; color: #166534; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+        .status-rejected { background: #fecaca; color: #dc2626; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success { background: #bbf7d0; color: #166534; border: 1px solid #86efac; }
+        .alert-error { background: #fecaca; color: #dc2626; border: 1px solid #fca5a5; }
+        .alert-info { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+
+        /* Chat Interface */
+        .chat-container {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f7fafc;
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .chat-message.sent {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+        }
+
+        .chat-message.received {
+            background: white;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background: white;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .chat-input button {
+            padding: 0.75rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>AfyaLink</span>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#" class="nav-link" data-page="dashboard">Dashboard</a>
+                    <a href="#" class="nav-link" data-page="patients">Patients</a>
+                    <a href="#" class="nav-link" data-page="referrals">Referrals</a>
+                    <a href="#" class="nav-link" data-page="facilities">Facilities</a>
+                    <a href="#" class="nav-link" data-page="messages">Messages</a>
+                    <a href="#" class="nav-link" data-page="admin">Admin</a>
+                </nav>
+                <div class="user-menu">
+                    <button class="notification-btn" id="notificationBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge">3</span>
+                    </button>
+                    <div class="user-info">
+                        <span id="userName">Dr. Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Dashboard -->
+            <div id="dashboard" class="page">
+                <h1>Healthcare Dashboard</h1>
+                <div class="dashboard-grid">
+                    <!-- Patients Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon patients-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="card-title">Patient Management</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-number" id="totalPatients">1,247</div>
+                                    <div class="stat-label">Total Patients</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="activePatients">89</div>
+                                    <div class="stat-label">Active Today</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="newPatients">23</div>
+                                    <div class="stat-label">New This Week</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="showPage('patients')">
+                                <i class="fas fa-plus"></i>
+                                Add Patient
+                            </button>
+                            <button class="btn btn-secondary" onclick="showPage('patients')">
+                                <i class="fas fa-list"></i>
+                                View All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Referrals Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon referrals-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <h3 class="card-title">Referral Management</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-number" id="pendingReferrals">12</div>
+                                    <div class="stat-label">Pending</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="acceptedReferrals">8</div>
+                                    <div class="stat-label">Accepted</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="completedReferrals">45</div>
+                                    <div class="stat-label">Completed</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="showPage('referrals')">
+                                <i class="fas fa-plus"></i>
+                                New Referral
+                            </button>
+                            <button class="btn btn-secondary" onclick="showPage('referrals')">
+                                <i class="fas fa-list"></i>
+                                View All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Facilities Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon facilities-icon">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                            <h3 class="card-title">Healthcare Facilities</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-number" id="totalFacilities">171</div>
+                                    <div class="stat-label">Total Facilities</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="availableFacilities">23</div>
+                                    <div class="stat-label">Available Now</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="specialists">89</div>
+                                    <div class="stat-label">Specialists</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="showPage('facilities')">
+                                <i class="fas fa-search"></i>
+                                Find Facility
+                            </button>
+                            <button class="btn btn-secondary" onclick="showPage('facilities')">
+                                <i class="fas fa-list"></i>
+                                Directory
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Messages Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon messages-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h3 class="card-title">Secure Messaging</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-number" id="unreadMessages">7</div>
+                                    <div class="stat-label">Unread</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="activeChats">12</div>
+                                    <div class="stat-label">Active Chats</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="todayMessages">34</div>
+                                    <div class="stat-label">Today</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="showPage('messages')">
+                                <i class="fas fa-comment"></i>
+                                New Message
+                            </button>
+                            <button class="btn btn-secondary" onclick="showPage('messages')">
+                                <i class="fas fa-inbox"></i>
+                                Inbox
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patients Page -->
+            <div id="patients" class="page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon patients-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h2 class="card-title">Patient Management</h2>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <button class="btn btn-primary" onclick="showPatientModal()">
+                                <i class="fas fa-plus"></i>
+                                Add New Patient
+                            </button>
+                            <input type="text" placeholder="Search patients..." class="form-input" style="flex: 1;" id="patientSearch">
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Patient ID</th>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                        <th>Condition</th>
+                                        <th>Last Visit</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="patientsTable">
+                                    <tr>
+                                        <td>PAT001</td>
+                                        <td>John Doe</td>
+                                        <td>45</td>
+                                        <td>Hypertension</td>
+                                        <td>2024-01-15</td>
+                                        <td><span class="status-badge status-accepted">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewPatient('PAT001')" aria-label="View patient PAT001">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="editPatient('PAT001')" aria-label="Edit patient PAT001">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PAT002</td>
+                                        <td>Jane Smith</td>
+                                        <td>32</td>
+                                        <td>Diabetes</td>
+                                        <td>2024-01-10</td>
+                                        <td><span class="status-badge status-pending">Under Treatment</span></td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewPatient('PAT002')" aria-label="View patient PAT002">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="editPatient('PAT002')" aria-label="Edit patient PAT002">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referrals Page -->
+            <div id="referrals" class="page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon referrals-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h2 class="card-title">Referral Management</h2>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <button class="btn btn-primary" onclick="showReferralModal()">
+                                <i class="fas fa-plus"></i>
+                                Create Referral
+                            </button>
+                            <select class="form-select" id="referralFilter">
+                                <option value="all">All Referrals</option>
+                                <option value="pending">Pending</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Referral ID</th>
+                                        <th>Patient</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="referralsTable">
+                                    <tr>
+                                        <td>REF001</td>
+                                        <td>John Doe</td>
+                                        <td>Dr. Smith</td>
+                                        <td>Cardiology Dept</td>
+                                        <td><span class="status-badge status-accepted">High</span></td>
+                                        <td><span class="status-badge status-pending">Pending</span></td>
+                                        <td>2024-01-15</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewReferral('REF001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="updateReferral('REF001')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REF002</td>
+                                        <td>Jane Smith</td>
+                                        <td>Dr. Johnson</td>
+                                        <td>Endocrinology</td>
+                                        <td><span class="status-badge status-completed">Medium</span></td>
+                                        <td><span class="status-badge status-accepted">Accepted</span></td>
+                                        <td>2024-01-12</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewReferral('REF002')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="updateReferral('REF002')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Facilities Page -->
+            <div id="facilities" class="page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon facilities-icon">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <h2 class="card-title">Healthcare Facilities</h2>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <input type="text" placeholder="Search facilities..." class="form-input" style="flex: 1;" id="facilitySearch">
+                            <select class="form-select" id="facilityType">
+                                <option value="">All Types</option>
+                                <option value="hospital">Hospital</option>
+                                <option value="clinic">Clinic</option>
+                                <option value="specialist">Specialist Center</option>
+                            </select>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Facility Name</th>
+                                        <th>Type</th>
+                                        <th>Location</th>
+                                        <th>Specialties</th>
+                                        <th>Availability</th>
+                                        <th>Rating</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="facilitiesTable">
+                                    <tr>
+                                        <td>City General Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Downtown</td>
+                                        <td>Emergency, Surgery, Cardiology</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.8)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('CGH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('CGH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Metro Heart Center</td>
+                                        <td>Specialist</td>
+                                        <td>Midtown</td>
+                                        <td>Cardiology, Cardiac Surgery</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.9)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('MHC001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('MHC001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Utugi Healthcare Centre</td>
+                                        <td>Specialist</td>
+                                        <td>Nairobi</td>
+                                        <td>General Medicine, Pediatrics</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.7)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('UHC001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('UHC001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stafel Orthocare Ltd</td>
+                                        <td>Specialist</td>
+                                        <td>Nairobi</td>
+                                        <td>Orthopedics, Sports Medicine</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.8)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('SOC001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('SOC001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Meru Doctors Plaza</td>
+                                        <td>Specialist</td>
+                                        <td>Meru</td>
+                                        <td>General Practice, Surgery</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.6)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('MDP001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('MDP001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bemeke Radii Service</td>
+                                        <td>Specialist</td>
+                                        <td>Nairobi</td>
+                                        <td>Radiology, Imaging Services</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.9)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('BRS001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('BRS001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Salem Herbal Clinic</td>
+                                        <td>Specialist</td>
+                                        <td>Nairobi</td>
+                                        <td>Herbal Medicine, Alternative Therapy</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.5)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('SHC001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('SHC001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Siakago Healthcare Clinic</td>
+                                        <td>Specialist</td>
+                                        <td>Siakago</td>
+                                        <td>General Healthcare, Emergency Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.4)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('SHC002')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('SHC002')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Smartlens Optician</td>
+                                        <td>Specialist</td>
+                                        <td>Nairobi</td>
+                                        <td>Optometry, Eye Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.7)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('SLO001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('SLO001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Meru University</td>
+                                        <td>Hospital</td>
+                                        <td>Meru</td>
+                                        <td>General Medicine, Surgery, Emergency Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.6)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('MERU001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('MERU001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Grace Park Medical Centre</td>
+                                        <td>Clinic</td>
+                                        <td>Nairobi</td>
+                                        <td>General Practice, Pediatrics, Family Medicine</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.5)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('GPMC001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('GPMC001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sanitas Family Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Nairobi</td>
+                                        <td>Family Medicine, Internal Medicine, Surgery</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.7)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('SFH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('SFH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>St. Anne Mission Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Nairobi</td>
+                                        <td>General Medicine, Maternity, Surgery</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.8)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('SAMH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('SAMH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Woodlands Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Nairobi</td>
+                                        <td>General Medicine, Orthopedics, Cardiology</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.6)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('WH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('WH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Imara Hospital-Embu</td>
+                                        <td>Hospital</td>
+                                        <td>Embu</td>
+                                        <td>General Medicine, Surgery, Emergency Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.5)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('IHE001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('IHE001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>P.C.E.A Chogoria Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Chogoria</td>
+                                        <td>General Medicine, Surgery, Maternity, Pediatrics</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.7)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('PCEACH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('PCEACH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Miathene Sub-County Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Meru</td>
+                                        <td>General Medicine, Surgery, Emergency Care, Pediatrics</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.4)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('MSCH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('MSCH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Magunga Level 4 Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Homabay</td>
+                                        <td>General Medicine, Surgery, Maternity, Emergency Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.3)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('ML4H001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('ML4H001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kisii Level 5 Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Kisii</td>
+                                        <td>General Medicine, Surgery, Orthopedics, Cardiology, Emergency Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.6)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('KL5H001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('KL5H001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kenyatta Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Nairobi</td>
+                                        <td>General Medicine, Surgery, Emergency Care, Specialized Treatment</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.8)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('KH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('KH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Meru Jordan Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Meru</td>
+                                        <td>General Medicine, Surgery, Pediatrics, Maternity</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.5)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('MJH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('MJH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Imara Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Nairobi</td>
+                                        <td>General Medicine, Surgery, Emergency Care, Pediatrics</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.4)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('IH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('IH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Consolata Hospital Mathari</td>
+                                        <td>Hospital</td>
+                                        <td>Nairobi</td>
+                                        <td>General Medicine, Surgery, Mental Health, Emergency Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.6)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('CHM001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('CHM001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Maua Methodist Hospital</td>
+                                        <td>Hospital</td>
+                                        <td>Meru</td>
+                                        <td>General Medicine, Surgery, Maternity, Pediatrics, Emergency Care</td>
+                                        <td><span class="status-badge status-accepted">Available</span></td>
+                                        <td>⭐⭐⭐⭐⭐ (4.5)</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewFacility('MMH001')">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-primary" onclick="referToFacility('MMH001')">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Page -->
+            <div id="messages" class="page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon messages-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h2 class="card-title">Secure Messaging</h2>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                            <button class="btn btn-primary" onclick="showMessageModal()">
+                                <i class="fas fa-plus"></i>
+                                New Message
+                            </button>
+                        </div>
+
+                        <!-- Chat Interface -->
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="chat-message received">
+                                    <strong>Dr. Johnson:</strong> Patient referral for John Doe has been accepted. Treatment plan attached.
+                                </div>
+                                <div class="chat-message sent">
+                                    <strong>You:</strong> Thank you for the update. I'll review the treatment plan and follow up with the patient.
+                                </div>
+                                <div class="chat-message received">
+                                    <strong>Nurse Sarah:</strong> Lab results for Patient ID: PAT001 are ready for review.
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" placeholder="Type your message..." id="messageInput">
+                                <button onclick="sendMessage()">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Page -->
+            <div id="admin" class="page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon admin-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h2 class="card-title">System Administration</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="dashboard-grid">
+                            <div class="card">
+                                <h3>User Management</h3>
+                                <p>Manage healthcare providers, roles, and permissions</p>
+                                <button class="btn btn-primary" onclick="showUserManagement()">
+                                    <i class="fas fa-users-cog"></i>
+                                    Manage Users
+                                </button>
+                            </div>
+                            <div class="card">
+                                <h3>System Settings</h3>
+                                <p>Configure system parameters and security settings</p>
+                                <button class="btn btn-primary" onclick="showSystemSettings()">
+                                    <i class="fas fa-cogs"></i>
+                                    System Settings
+                                </button>
+                            </div>
+                            <div class="card">
+                                <h3>Audit Logs</h3>
+                                <p>View system activity and security logs</p>
+                                <button class="btn btn-primary" onclick="showAuditLogs()">
+                                    <i class="fas fa-file-alt"></i>
+                                    View Logs
+                                </button>
+                            </div>
+                            <div class="card">
+                                <h3>Reports</h3>
+                                <p>Generate healthcare analytics and reports</p>
+                                <button class="btn btn-primary" onclick="showReports()">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Generate Reports
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Management Section -->
+                <div id="userManagementSection" class="card" style="display: none;">
+                    <div class="card-header">
+                        <div class="card-icon admin-icon">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h2 class="card-title">User Management</h2>
+                    </div>
+                    <div class="card-content">
+                        <!-- User Management Controls -->
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="showAddUserModal()">
+                                <i class="fas fa-plus"></i>
+                                Add New User
+                            </button>
+                            <button class="btn btn-secondary" onclick="showBulkActions()">
+                                <i class="fas fa-list"></i>
+                                Bulk Actions
+                            </button>
+                            <select class="form-select" id="userRoleFilter" style="width: auto;">
+                                <option value="">All Roles</option>
+                                <option value="admin">Administrator</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="nurse">Nurse</option>
+                                <option value="staff">Medical Staff</option>
+                            </select>
+                            <select class="form-select" id="userStatusFilter" style="width: auto;">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                            <input type="text" placeholder="Search users..." class="form-input" style="flex: 1; min-width: 200px;" id="userSearch">
+                        </div>
+
+                        <!-- User Statistics -->
+                        <div class="stats-grid" style="margin-bottom: 1.5rem;">
+                            <div class="stat-item">
+                                <div class="stat-number" id="totalUsers">24</div>
+                                <div class="stat-label">Total Users</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="activeUsers">18</div>
+                                <div class="stat-label">Active Users</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="newUsers">3</div>
+                                <div class="stat-label">New This Month</div>
+                            </div>
+                        </div>
+
+                        <!-- Users Table -->
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllUsers"></th>
+                                        <th>User ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Department</th>
+                                        <th>Status</th>
+                                        <th>Last Login</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTable">
+                                    <tr>
+                                        <td><input type="checkbox" class="user-checkbox" value="USR001"></td>
+                                        <td>USR001</td>
+                                        <td>Dr. Sarah Johnson</td>
+                                        <td>sarah.johnson@afyalink.com</td>
+                                        <td><span class="status-badge status-accepted">Doctor</span></td>
+                                        <td>Cardiology</td>
+                                        <td><span class="status-badge status-accepted">Active</span></td>
+                                        <td>2024-01-15 14:30</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewUser('USR001')" title="View User">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="editUser('USR001')" title="Edit User">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="resetUserPassword('USR001')" title="Reset Password">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="user-checkbox" value="USR002"></td>
+                                        <td>USR002</td>
+                                        <td>Nurse Mary Wanjiku</td>
+                                        <td>mary.wanjiku@afyalink.com</td>
+                                        <td><span class="status-badge status-pending">Nurse</span></td>
+                                        <td>Emergency</td>
+                                        <td><span class="status-badge status-accepted">Active</span></td>
+                                        <td>2024-01-15 09:15</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewUser('USR002')" title="View User">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="editUser('USR002')" title="Edit User">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="resetUserPassword('USR002')" title="Reset Password">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="user-checkbox" value="USR003"></td>
+                                        <td>USR003</td>
+                                        <td>Dr. Peter Kamau</td>
+                                        <td>peter.kamau@afyalink.com</td>
+                                        <td><span class="status-badge status-accepted">Doctor</span></td>
+                                        <td>General Medicine</td>
+                                        <td><span class="status-badge status-completed">Active</span></td>
+                                        <td>2024-01-14 16:45</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewUser('USR003')" title="View User">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="editUser('USR003')" title="Edit User">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="resetUserPassword('USR003')" title="Reset Password">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="user-checkbox" value="USR004"></td>
+                                        <td>USR004</td>
+                                        <td>Admin Dickson Omondi</td>
+                                        <td>dickson.omondi@afyalink.com</td>
+                                        <td><span class="status-badge status-accepted">Administrator</span></td>
+                                        <td>IT/Admin</td>
+                                        <td><span class="status-badge status-accepted">Active</span></td>
+                                        <td>2024-01-15 11:20</td>
+                                        <td>
+                                            <button class="btn btn-secondary" onclick="viewUser('USR004')" title="View User">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="editUser('USR004')" title="Edit User">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-secondary" onclick="resetUserPassword('USR004')" title="Reset Password">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                            <div>
+                                <span id="userCount">Showing 1-4 of 24 users</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary" onclick="previousUserPage()" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="btn btn-secondary" onclick="nextUserPage()">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Patient Modal -->
+    <div id="patientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Patient</h3>
+                <button class="close-btn" onclick="closeModal('patientModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="patientForm">
+                <div class="form-group">
+                    <label for="form-label" class="form-label">Patient ID</label>
+                    <input type="text" class="form-input" id="patientId" required>
+                </div>
+                <div class="form-group">
+                    <label for="patientName" >Full Name</label>
+                    <input type="text" class="form-input" id="patientName" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="form-label"class="form-label">Age</label>
+                        <input type="number" class="form-input" id="patientAge" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-label">Gender</label>
+                        <select class="form-select" id="patientGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="form-label">Medical Condition</label>
+                    <input type="text" class="form-input" id="patientCondition" required>
+                </div>
+                <div class="form-group">
+                    <label for="form-label">Contact Information</label>
+                    <input type="tel" class="form-input" id="patientContact" required>
+                </div>
+                <div class="form-group">
+                    <label for="form-label">Emergency Contact</label>
+                    <input type="tel" class="form-input" id="emergencyContact" required>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('patientModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Patient</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Referral Modal -->
+    <div id="referralModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Referral</h3>
+                <button class="close-btn" onclick="closeModal('referralModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="referralForm">
+                <div class="form-group">
+                    <label for="form-label">Referral ID</label>
+                    <input type="text" class="form-input" id="referralId" required>
+                </div>
+                <div class="form-group">
+                    <label for="form-label">Patient</label>
+                    <select class="form-select" id="referralPatient" required>
+                        <option value="">Select Patient</option>
+                        <option value="PAT001">John Doe (PAT001)</option>
+                        <option value="PAT002">Jane Smith (PAT002)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="form-label">Referring Physician</label>
+                    <input type="text" class="form-input" id="referringPhysician" required>
+                </div>
+                <div class="form-group">
+                    <label for="form-label">Referral To</label>
+                    <select class="form-select" id="referralTo" required>
+                        <option value="">Select Facility/Specialist</option>
+                        <option value="CGH001">City General Hospital</option>
+                        <option value="MHC001">Metro Heart Center</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="form-label">Priority Level</label>
+                    <select class="form-select" id="referralPriority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('referralModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Referral</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
+
+ 
